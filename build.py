@@ -1,4 +1,6 @@
 import sys
+
+import subprocess
 from cx_Freeze import Executable, setup
 import pkgutil
 from pip.req import parse_requirements
@@ -25,6 +27,10 @@ modules = []
 for pkg in [proscli, prosconductor, prosconductor.providers, prosconfig, prosflasher]:
     modules.append(pkg.__name__)
 
+try:
+    v = subprocess.check_output(['git', 'describe', '--dirty'], stderr=subprocess.DEVNULL).decode().strip().replace('-','b', 1).replace('-','.')
+except subprocess.CalledProcessError as e:
+    v = open('version').read().strip()
 
 if sys.platform == 'win32':
     targetName = 'pros.exe'
@@ -33,7 +39,7 @@ else:
 
 setup(
     name='pros-cli',
-    version=open('version').read().strip(),
+    version=v,
     packages=modules,
     url='https://github.com/purduesigbots/pros-cli',
     license='MPL-2.0',
@@ -52,4 +58,6 @@ if sys.argv[1] == 'build_exe':
     py_compile.compile('./prosconductor/providers/githubreleases.py', cfile='{}/githubreleases.pyc'.format(build_dir))
     import shutil
     import platform
-    shutil.make_archive('pros_cli-{}-win-{}'.format(open('version').read().strip(), platform.architecture()[0]), 'zip', build_dir, '.')
+    print('zipping output')
+    shutil.make_archive('pros_cli-{}-{}-{}'.format(v, platform.system(), platform.architecture()[0]), 'zip', build_dir, '.')
+    print('Zipped output')

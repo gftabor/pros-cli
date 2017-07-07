@@ -1,0 +1,26 @@
+language: python
+python:
+- '3.6'
+install:
+- pip install -r requirements.txt
+- pip install cx_freeze wheel twine
+script:
+- python setup.py bdist_wheel
+- python build.py build_exe
+before_deploy:
+- python bintray.py
+deploy:
+- provider: releases
+  api_key:
+    secure: k/hRg6hiPASU7g+pOrfa3cBKIFRiJIZhEJffrzKgjghtSohlajC+vHEFqQ8yqklz2SnQbB5yvRO3ItjEC6E7m0wbmSZ2HCIY9g2q9VGbKNIx+Py18PvGw+oKCsS9zLQxnn4+HsX0xx4498lirjBUklp0Bnu3lG5BmKjqEnEu1MlqQExovzOpqQCGNgyheZyuMtoAi/tcDSfCO5ZKR8QR0ruzg42aHLsVo48o9+aNTiuhmyGfMEhRCFFjXD8ufB5yLzz1Z8b0PafURY6C6xWteZgdM40NgqNs81AOu6/zpIOI1IctDTIw8AdBoq7BnM3K7huLZ8mbaW1OBuErToMN5sLq5Jn8ijJDoS0CFQBsR6aeMy8sUDTvyf7y9JCDm3B+PFegwP1x3iEGrIRRWN5Ap2YAedGKbq1Rm4Jh4zWHrW4AZskHsLyZ4X07v9RF9fmmeBXTYFeo0rvCbxxN+tfU+bFsrdO7WeUyUfEoucSooIbrPa2jnxgR99c9qVZ6qvf3TGj59aCXj94Ncv8Wtb1qBXBkV8M6xv5absisUMFKA7JOLz1pxAfZbk/vSk1MJXzI1KGfUHBsRBzW+9ox6HyRghnc4ilBUBlEZYCAhbfe/dc7/nvEHfckSRBUc9cFL6eGVVkFHOsP+NP8DN+JjWsp0iE7S8N+kKKC81rcaDF8LcI=
+  file_glob: true
+  file:
+  - ./(pros_cli-*.zip)
+  - ./dist/*.whl
+
+- provider: bintray
+  file: "./bintray.json"
+  user: "edjubuh"
+  key:
+    secure: r48IUWddjka+xH1XPehopSRKC/FD6j/u2ep4W/Yw2Dm/CGwhLDEy4QKp4J3C5eHrUYW5zmwTluXDEHruGO9F8+IloClZammdh5s74Tk30fAOqUd8bTznwBeS6BsWS+yaLEGwdyFGSIrWoVt9XMIAr3hQ2UZQSsmaJxWu1QzTl5Ru4CDwUcGg8im81OtNBjF+1R3/6F9GvFnOannFz5EhUxTIlpxpuoCgDbtAEmw5BRvcwhoNZTyG6Cd0ymB4I7DbP0qUkOaxTWZE2x//Hx3DFMaTsKz+X/dctKm/YZireV8jnN25w8U1GLcNcr53gYd29bE59W3Lp3ZYJSRbp/GbWPD7a3pXxUG7IWu2JUMrzOebt1J3m7lIt1OpdcFZMRY1msV9ScFJWLCLSMyASYU+JtuIAIboTpfuAKLOkeohymmY5H00NSVlJ9PttBtnEuPj3fj2ZEbhZGpgHuyjsJMI5jQTqWLARcLNz8rL2w5yEKthR+CNQXUEm48zX6TiN1qIymbp6GOq9ULUwM4dvhP2dET4pT1mZ8zKhm4Ilgla7Pfv+vSyyUo6lbXbZWIzxL92VFXl+qoU6WDi7No86dbAygcloTHCV0nmVjkdhvuGcwP36eRn4m9ev24BW8hDQKaAmpYe3hLLDRow0zUTCXVpxgG3xNhSyb4Ps5y5sHfCMJA=
+
